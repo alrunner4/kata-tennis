@@ -1,0 +1,4 @@
+package tennis-tests
+depends = contrib, test
+executable = "tests"
+main = Main
