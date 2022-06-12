@@ -31,58 +31,44 @@ mutual
       Winner:    (p: Player) -> WinnerState p
 
 public export
-deuceState: PlayingState
-deuceState = Scores 3 3
+AnyState: Type
+AnyState = (winner ** GameState {winner})
 
-public export total
+public export
+deuce: PlayingState
+deuce = Scores FZ FZ
+
+public export
 isDeuce: PlayingState -> Bool
 isDeuce( Scores FZ FZ ) = True
 isDeuce _ = False
 
-public export total
+public export
 score: Fin 4 -> String
 score 3 = "love"
 score 2 = "fifteen"
 score 1 = "thirty"
 score 0 = "forty"
 
-export total
+export
 newGameState: PlayingState
 newGameState = Scores last last
 
-public export total
-gameScore: {winner: Maybe Player} -> GameState {winner} -> String
+public export
+gameScore: GameState -> String
 gameScore s@(Scores l r) = if isDeuce s then "deuce"
    else score l ++ if l == r then " all" else ", " ++ score r
 gameScore (Advantage p) = "advantage " ++ show p
 gameScore (Winner p) = "winner " ++ show p
 
 public export
-AnyState: Type
-AnyState = (winner ** GameState {winner})
-
-public export total
-Point: Type
-Point = PlayingState -> AnyState
-
-public export total
-point: Player -> Point
-point p (Advantage q) = if p == q then (_ ** Winner p) else (_ ** deuceState)
+point: Player -> PlayingState -> AnyState
+point p (Advantage q) = if p == q then (_ ** Winner p) else (_ ** deuce)
 point p (Scores FZ FZ) = (_ ** Advantage p)
 point L (Scores FZ _) = (_ ** Winner L) -- these pattern matches are the reason why `score` counts
 point R (Scores _ FZ) = (_ ** Winner R) -- down instead of up
 point L (Scores (FS l) r) = (_ ** Scores (weaken l) r)
 point R (Scores l (FS r)) = (_ ** Scores l (weaken r))
-
-public export
-evalGame: Point -> PlayingState -> AnyState
-evalGame = ($)
-
-public export
-winner: Point -> PlayingState -> Player
-
-public export
-winnerL: GameState {winner = Just L}
 
 --public export total
 --totalGame: (points: List Point) -> ( foldr ($) (Scores 0 0) points = Winner _ )
