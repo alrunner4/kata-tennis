@@ -1,10 +1,11 @@
 module Tennis
-import Data.Fin
-import Data.Vect
+
+import public Data.Fin
+import public Data.Vect
 
 %default total
 
-export
+public export
 Player: Type
 Player = Fin 2
 

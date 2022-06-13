@@ -1,4 +1,4 @@
 import Tennis
 
 main: IO ()
-main = printLn$ gameScore newGameState == "love all"
+main = printLn$ gameScore ["A","B"] newGame == "love all"
