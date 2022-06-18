@@ -43,10 +43,20 @@ main = do
       (\_ => putStr "tests passed\n")
     $ evalStateT {stateType = AnyState} (_ ** love_all)$ do
          assert_score "love all"
-         State.point 0
+         point 0
          assert_score "fifteen, love"
-         State.point 1
+         point 1
          assert_score "fifteen all"
-         State.point 0
+         point 0
          assert_score "thirty, fifteen"
+         point 1
+         assert_score "thirty all"
+         point 1
+         assert_score "thirty, forty"
+         point 0
+         assert_score "deuce"
+         point 0
+         assert_score "advantage A"
+         point 0
+         assert_score "winner A"
 
