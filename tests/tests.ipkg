@@ -1,4 +1,4 @@
 package tennis-tests
-depends = contrib, test
+depends = contrib, kata-tennis
 executable = "tests"
 main = Main

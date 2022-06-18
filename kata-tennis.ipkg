@@ -1,2 +1,2 @@
 package kata-tennis
-modules = Tennis
+modules = Tennis, Tennis.State

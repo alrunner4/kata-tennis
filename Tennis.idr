@@ -32,18 +32,10 @@ AnyState: Type
 AnyState = (winner ** GameState {winner})
 
 export
-deuce: PlayingState
-deuce = Scores FZ FZ
+love_all: PlayingState
+love_all = Scores last last
 
-export
-isDeuce: PlayingState -> Bool
-isDeuce( Scores FZ FZ ) = True
-isDeuce _ = False
-
-export
-newGame: PlayingState
-newGame = Scores last last
-
+private
 score: Fin 4 -> String
 score 3 = "love"
 score 2 = "fifteen"
@@ -53,16 +45,17 @@ score 0 = "forty"
 public export
 gameScore: Vect 2 String -> GameState -> String
 gameScore playerNames = \case
-   s@(Scores l r) =>
-      if isDeuce s then "deuce"
-      else score l ++ if l == r then " all"
-                                else ", " ++ score r
+   Scores l r =>
+      if l == FZ && r == FZ then "deuce"
+      else score l ++
+         if l == r then " all"
+                   else ", " ++ score r
    Advantage p => "advantage " ++ index p playerNames
    Winner p    => "winner "    ++ index p playerNames
 
 public export
 point: Player -> PlayingState -> AnyState
-point p (Advantage q) = if p == q then (_ ** Winner p) else (_ ** deuce)
+point p (Advantage q) = if p == q then (_ ** Winner p) else (_ ** Scores FZ FZ)
 point p (Scores  FZ    FZ   ) = (_ ** Advantage p)
 point 0 (Scores  FZ    _    ) = (_ ** Winner 0)
 point 1 (Scores  _     FZ   ) = (_ ** Winner 1)
@@ -76,6 +69,6 @@ runGame: List Player -> PlayingState -> Maybe AnyState
 runGame [] s = Just (_ ** s)
 runGame (p::ps) s = case point p s of
    (Nothing ** s') => runGame ps s'
-   s' => case ps of
-      [] => Just s'
+   gameWithWinner  => case ps of
+      [] => Just gameWithWinner
       _  => Nothing

@@ -1,2 +1,0 @@
-#!/bin/sh
-tree "$(dirname "$0")" -I build
